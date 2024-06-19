@@ -26,3 +26,18 @@ aws cloudformation delete-stack --stack-name demo-stack-1
 ```
 aws cloudformation describe-stacks --stack-name demo-stack-1 | jq '.Stacks[0].Outputs'
 ```
+
+## Gen kubeconfig
+```
+aws eks update-kubeconfig --name demo-stack-1-eks-cluster --region eu-central-1
+kubectl cluster-info
+kubectl get pods --all-namespaces
+```
+
+## Save python script as configmap
+```
+kubectl create configmap python-script --from-file=cronjob.py
+kubectl describe configmap python-script
+kubectl delete configmap python-script
+kubectl run my-shell --rm -i --tty --image python:slim -- bash
+```
