@@ -12,10 +12,10 @@ spec:
         spec:
           containers:
             - name: my-container
-              image: amazon/aws-cli:latest
+              image: python:slim
               #command: ["python", "/code/cronjob.py"]
               command: ["/bin/sh","-c"]
-              args: ["python -m pip install requests; python /code/cronjob.py"]
+              args: ["pip install requests boto3; python /code/cronjob.py"]
               volumeMounts:
                 - name: python-script
                   mountPath: /code
