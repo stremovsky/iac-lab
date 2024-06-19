@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: my-cronjob
+  namespace: default
+spec:
+  schedule: "* * * * *"  # Run every minute (cron syntax)
+  concurrencyPolicy: Forbid  # Optional: Prevent concurrent executions (default: Allow)
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: my-container
+              image: amazon/aws-cli:latest
+              #command: ["python", "/code/cronjob.py"]
+              command: ["/bin/sh","-c"]
+              args: ["python -m pip install requests; python /code/cronjob.py"]
+              volumeMounts:
+                - name: python-script
+                  mountPath: /code
+          volumes:
+            - name: python-script
+              configMap:
+                name: python-script
+          restartPolicy: OnFailure  # Optional: Restart policy for the container
