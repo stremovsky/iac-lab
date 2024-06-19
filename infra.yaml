@@ -268,38 +268,28 @@ Resources:
           Value: !Ref ProjectName
 
   EKSNodeGroup:
-    Type: AWS::AutoScaling::AutoScalingGroup
+    Type: AWS::EKS::Nodegroup
     Properties:
-      VPCZoneIdentifier:
+      ClusterName: !Ref EKSCluster
+      NodeRole: !GetAtt EKSNodeRole.Arn
+      Subnets:
         - !Ref PrivateSubnet1
         - !Ref PrivateSubnet2
-      LaunchTemplate:
-        LaunchTemplateId: !Ref EKSNodeGroupLaunchTemplate
-      MinSize: !Ref NumberOfNodes
-      MaxSize: !Ref MaxNumberOfNodes
-      DesiredCapacity: !Ref NumberOfNodes
+      ScalingConfig:
+        DesiredSize: !Ref NumberOfNodes
+        MinSize: !Ref NumberOfNodes
+        MaxSize: !Ref MaxNumberOfNodes
+      #AmiType: AL2_ARM_64
+      InstanceTypes:
+        - t4g.medium
+      DiskSize: 20
+      RemoteAccess:
+        Ec2SshKey: !Ref KeyName
       Tags:
         - Key: Name
           Value: !Sub "${AWS::StackName}-eks-node-group"
-          PropagateAtLaunch: true
         - Key: Project
           Value: !Ref ProjectName
-          PropagateAtLaunch: true
-
-  EKSNodeGroupLaunchTemplate:
-    Type: AWS::AutoScaling::LaunchConfiguration
-    Properties:
-      ImageId: ami-0d3e4814b6f494bba # ubuntu 22.04 + EKS 1.30 ARM, price 0.04
-      InstanceType: t4g.medium # Graviton
-      IamInstanceProfile: !Ref EKSNodeInstanceProfile
-      UserData: 
-        Fn::Base64: !Sub |
-          #!/bin/bash
-          set -o xtrace
-          /etc/eks/bootstrap.sh ${EKSCluster}
-      SecurityGroups:
-        - !Ref EKSSecurityGroup
-      KeyName: !Ref KeyName  # Ensure you have an existing key pair
 
   EKSNodeInstanceProfile:
     Type: AWS::IAM::InstanceProfile
