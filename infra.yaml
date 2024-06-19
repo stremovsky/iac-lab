@@ -279,17 +279,13 @@ Resources:
         DesiredSize: !Ref NumberOfNodes
         MinSize: !Ref NumberOfNodes
         MaxSize: !Ref MaxNumberOfNodes
-      #AmiType: AL2_ARM_64
+      AmiType: AL2_ARM_64 #AL2023_ARM_64_STANDARD
       InstanceTypes:
         - t4g.medium
       DiskSize: 20
       RemoteAccess:
         Ec2SshKey: !Ref KeyName
-      Tags:
-        - Key: Name
-          Value: !Sub "${AWS::StackName}-eks-node-group"
-        - Key: Project
-          Value: !Ref ProjectName
+      Tags: {Project: !Ref ProjectName}
 
   EKSNodeInstanceProfile:
     Type: AWS::IAM::InstanceProfile
