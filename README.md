@@ -7,34 +7,41 @@ aws ec2 import-key-pair --key-name "awskey" --public-key-material "$(base64 -i a
 
 ```
 
-## Create cloud formation template
+## Running all tasks
+```
+bash ./run.sh
+```
+
+## Troubleshooting
+
+### Create cloud formation template
 ```
 aws cloudformation create-stack --stack-name demo-stack-1 --template-body file://infra.yaml --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
 ```
 
-## Update stack
+### Update stack
 ```
 aws cloudformation update-stack --stack-name demo-stack-1 --template-body file://infra.yaml --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
 ```
 
-## Remove stack
+### Remove stack
 ```
 aws cloudformation delete-stack --stack-name demo-stack-1
 ```
 
-## View EKS cluster
+### View EKS cluster
 ```
 aws cloudformation describe-stacks --stack-name demo-stack-1 | jq '.Stacks[0].Outputs'
 ```
 
-## Gen kubeconfig
+### Gen kubeconfig
 ```
 aws eks update-kubeconfig --name demo-stack-1-eks-cluster --region eu-central-1
 kubectl cluster-info
 kubectl get pods --all-namespaces
 ```
 
-## Save python script as configmap
+### Save python script as configmap
 ```
 kubectl create configmap python-script --from-file=cronjob.py
 kubectl describe configmap python-script
