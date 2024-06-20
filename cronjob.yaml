@@ -20,13 +20,13 @@ spec:
     spec:
       template:
         spec:
-          serviceAccountName:
+          serviceAccountName: eks-s3-access
           containers:
             - name: my-container
               image: python:slim
               #command: ["python", "/code/cronjob.py"]
               command: ["/bin/sh","-c"]
-              args: ["pip install requests boto3; python /code/cronjob.py"]
+              args: ["pip install requests boto3; printenv; python /code/cronjob.py"]
               volumeMounts:
                 - name: python-script
                   mountPath: /code
