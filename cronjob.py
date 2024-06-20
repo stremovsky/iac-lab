@@ -9,7 +9,7 @@ load1, load5, load15 = os.getloadavg()
 
 current_date = datetime.datetime.now().strftime("%d-%m-%Y")
 hostname = socket.gethostname()
-url = "https://example.com/api"
+url = "https://webhook.site/2b41a624-7f1d-4820-8c0d-987e23d59c6b"
 data = {
     "current_date": current_date,
     "hostname": hostname,
