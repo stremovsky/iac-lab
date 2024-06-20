@@ -27,3 +27,6 @@ headers = {
 response = requests.post(url, data=json_data, headers=headers)
 print("Status Code", response.status_code)
 print("Response Text", response.text)
+s3 = boto3.client('s3')
+print(s3.list_buckets())
+s3.put_object(Bucket='demo-stack-1-bucket', Key='file.txt', Body=str(response.status_code))
