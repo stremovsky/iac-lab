@@ -9,12 +9,12 @@ aws ec2 import-key-pair --key-name "awskey" --public-key-material "$(base64 -i a
 
 ## Create cloud formation template
 ```
-aws cloudformation create-stack --stack-name demo-stack-1 --template-body file://infra.yaml --capabilities CAPABILITY_IAM
+aws cloudformation create-stack --stack-name demo-stack-1 --template-body file://infra.yaml --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
 ```
 
 ## Update stack
 ```
-aws cloudformation update-stack --stack-name demo-stack-1 --template-body file://infra.yaml --capabilities CAPABILITY_IAM
+aws cloudformation update-stack --stack-name demo-stack-1 --template-body file://infra.yaml --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
 ```
 
 ## Remove stack
