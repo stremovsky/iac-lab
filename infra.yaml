@@ -304,6 +304,44 @@ Resources:
         - Key: Project
           Value: !Ref ProjectName
 
+  OIDCProvider:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: !GetAtt EKSCluster.OpenIdConnectIssuerUrl
+      ClientIdList:
+        - sts.amazonaws.com
+      ThumbprintList:
+        - "E0E26D9ED4D742902002F2DEBC267811C0F31F1D"
+
+  EKSClusterS3WriterIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Fn::Sub:
+          - '{
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Action": "sts:AssumeRoleWithWebIdentity",
+                "Condition": {
+                  "StringEquals": {
+                    "${OpenIdConnectIssuer}:aud": "sts.amazonaws.com",
+                    "${OpenIdConnectIssuer}:sub": "system:serviceaccount:default:eks-s3-access"
+                  }
+                },
+                "Effect": "Allow",
+                "Principal": {
+                  "Federated": "arn:aws:iam::${AWS::AccountId}:oidc-provider/${OpenIdConnectIssuer}"
+                }
+              }
+            ]
+          }'
+          - { OpenIdConnectIssuer: !Select [1, !Split ["//", !GetAtt EKSCluster.OpenIdConnectIssuerUrl]] }
+      ManagedPolicyArns:
+        #- arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      RoleName: EKSClusterS3WriterIAMRole
+
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
