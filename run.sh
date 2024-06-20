@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ ! -e "awskey" ]; then
+    echo "create ssh keys"
+    ssh-keygen -t rsa -b 4096 -C "awskey" -N "" -f awskey
+    aws ec2 import-key-pair --key-name "awskey" --public-key-material "$(base64 -i awskey.pub)"
+fi
+
 echo "create stack"
 aws cloudformation create-stack --stack-name demo-stack-1 --template-body file://infra.yaml --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
 
