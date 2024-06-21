@@ -1,5 +1,7 @@
 #!/bin/bash
 
+CLUSTER="demo-stack-1-eks-cluster"
+
 if [ ! -e "awskey" ]; then
     echo "create ssh keys"
     ssh-keygen -t rsa -b 4096 -C "awskey" -N "" -f awskey
@@ -10,11 +12,11 @@ echo "create stack"
 aws cloudformation create-stack --stack-name demo-stack-1 --template-body file://infra.yaml --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
 
 echo "waiting for cluster to be ready"
-CLUSTER="demo-stack-1-eks-cluster"
+sleep 1
 aws eks wait cluster-active --name $CLUSTER
 
 echo "update kubernetes configuration"
-aws eks update-kubeconfig --name demo-stack-1-eks-cluster --region eu-central-1
+aws eks update-kubeconfig --name $CLUSTER --region eu-central-1
 
 echo "display cluster info"
 kubectl cluster-info
