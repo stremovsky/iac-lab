@@ -1,6 +1,7 @@
 #!/bin/bash
 
 CLUSTER="demo-stack-1-eks-cluster"
+AWS_ACCOUNT_ID=`aws sts get-caller-identity --query 'Account' --output text`
 
 if [ ! -e "awskey" ]; then
     echo "create ssh keys"
@@ -25,7 +26,7 @@ echo "terraform init"
 terraform init
 
 echo "terraform apply"
-terraform apply
+terraform apply -var="aws_account_id=$AWS_ACCOUNT_ID"
 
 echo "check kubernetes pods"
 kubectl get pods

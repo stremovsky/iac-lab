@@ -9,3 +9,8 @@ terraform {
 provider "kubernetes" {
   config_path = "~/.kube/config"
 }
+
+variable "aws_account_id" {
+  description = "AWS account ID"
+  type        = string
+}
