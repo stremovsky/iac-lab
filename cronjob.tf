@@ -1,15 +1,3 @@
-terraform {
-  required_providers {
-    kubernetes = {
-      source = "hashicorp/kubernetes"
-    }
-  }
-}
-
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-
 resource "kubernetes_service_account" "eks_s3_access" {
   metadata {
     name      = "eks-s3-access"
