@@ -5,15 +5,6 @@ resource "kubernetes_service_account" "eks_s3_access" {
 
     annotations = {
       "eks.amazonaws.com/role-arn" = "arn:aws:iam::${var.aws_account_id}:role/EKSClusterS3WriterIAMRole"
-      "kubectl.kubernetes.io/last-applied-configuration" = jsonencode({
-        apiVersion = "v1"
-        kind       = "ServiceAccount"
-        metadata = {
-          annotations = {}
-          name        = "eks-s3-access"
-          namespace   = "default"
-        }
-      })
     }
   }
 }
