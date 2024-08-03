@@ -11,7 +11,7 @@ resource "kubernetes_service_account" "eks_s3_access" {
 
 resource "kubernetes_config_map" "python_script_configmap" {
   metadata {
-    name = "python-script"
+    name      = "python-script"
     namespace = "default"
   }
   data = {
@@ -21,16 +21,16 @@ resource "kubernetes_config_map" "python_script_configmap" {
 
 resource "kubernetes_cron_job_v1" "example_cronjob" {
   metadata {
-    name = "example-cronjob"
+    name      = "example-cronjob"
     namespace = "default"
   }
 
   spec {
-    schedule  = "* * * * *"
+    schedule = "* * * * *"
 
     job_template {
       metadata {
-        name = "example-cronjob-job"
+        name      = "example-cronjob-job"
         namespace = "default"
       }
       spec {
@@ -41,12 +41,12 @@ resource "kubernetes_cron_job_v1" "example_cronjob" {
           spec {
             service_account_name = "eks-s3-access"
             container {
-              image = "python:slim"
-              name  = "example-cronjob"
+              image   = "python:slim"
+              name    = "example-cronjob"
               command = ["sh", "-c", "pip install requests boto3; printenv; python /code/cronjob.py"]
               volume_mount {
                 mount_path = "/code"
-                name = kubernetes_config_map.python_script_configmap.metadata[0].name
+                name       = kubernetes_config_map.python_script_configmap.metadata[0].name
               }
             }
             volume {
